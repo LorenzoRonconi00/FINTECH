@@ -31,6 +31,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <Link href="/accounts" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
                             Conti
                         </Link>
+                        <Link href="/settings/categories" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
+                            Categorie
+                        </Link>
                     </nav>
                     <form action={logout}>
                         <button
