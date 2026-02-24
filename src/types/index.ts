@@ -45,3 +45,7 @@ export const TRANSACTION_TYPE_LABELS: Record<TransactionType, string> = {
     income: 'Entrata',
     expense: 'Uscita',
 }
+
+export type TransferTemplate = Database['public']['Tables']['transfer_templates']['Row']
+export type TransferTemplateInsert = Database['public']['Tables']['transfer_templates']['Insert']
+export type TransferTemplateUpdate = Database['public']['Tables']['transfer_templates']['Update']

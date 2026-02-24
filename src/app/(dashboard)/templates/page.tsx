@@ -1,14 +1,17 @@
-import { getRecurringTemplates } from '@/lib/queries/templates'
+import { getRecurringTemplates, getTransferTemplates } from '@/lib/queries/templates'
 import { getActiveAccounts } from '@/lib/queries/accounts'
 import { getCategories } from '@/lib/queries/categories'
 import { CreateRecurringTemplateDialog } from '@/components/templates/CreateRecurringTemplateDialog'
 import { EditRecurringTemplateDialog } from '@/components/templates/EditRecurringTemplateDialog'
 import { ToggleTemplateButton } from '@/components/templates/ToggleTemplateButton'
-import { TRANSACTION_TYPE_LABELS } from '@/types'
+import { CreateTransferTemplateDialog } from '@/components/templates/CreateTransferTemplateDialog'
+import { EditTransferTemplateDialog } from '@/components/templates/EditTransferTemplateDialog'
+import { TRANSACTION_TYPE_LABELS, TransferTemplate } from '@/types'
 
 export default async function TemplatesPage() {
-    const [templates, accounts, categories] = await Promise.all([
+    const [templates, transferTemplates, accounts, categories] = await Promise.all([
         getRecurringTemplates(),
+        getTransferTemplates(),
         getActiveAccounts(),
         getCategories(),
     ])
@@ -25,7 +28,10 @@ export default async function TemplatesPage() {
                         Gestisci le voci ricorrenti mensili
                     </p>
                 </div>
-                <CreateRecurringTemplateDialog accounts={accounts} categories={categories} />
+                <div className="flex items-center gap-3">
+                    <CreateTransferTemplateDialog accounts={accounts} />
+                    <CreateRecurringTemplateDialog accounts={accounts} categories={categories} />
+                </div>
             </div>
 
             {templates.length === 0 && (
@@ -52,8 +58,8 @@ export default async function TemplatesPage() {
                                     <div
                                         key={template.id}
                                         className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-colors ${template.is_active
-                                                ? 'border-white/10 bg-white/5 hover:border-white/15'
-                                                : 'border-white/5 bg-white/2 opacity-50'
+                                            ? 'border-white/10 bg-white/5 hover:border-white/15'
+                                            : 'border-white/5 bg-white/2 opacity-50'
                                             }`}
                                     >
                                         <div className="flex items-center gap-3 min-w-0">
@@ -91,6 +97,7 @@ export default async function TemplatesPage() {
                                             <ToggleTemplateButton
                                                 id={template.id}
                                                 isActive={template.is_active}
+                                                type="recurring"
                                             />
                                             <EditRecurringTemplateDialog
                                                 template={template}
@@ -105,6 +112,71 @@ export default async function TemplatesPage() {
                     </section>
                 ) : null
             )}
+            <section>
+                <h2 className="text-xs font-mono uppercase tracking-widest text-white/30 mb-3">
+                    Trasferimenti
+                </h2>
+
+                {transferTemplates.length === 0 ? (
+                    <div className="text-center py-8 rounded-xl border border-white/10 border-dashed bg-white/2">
+                        <p className="text-white/40 font-mono text-sm">Nessun template di trasferimento</p>
+                    </div>
+                ) : (
+                    <div className="space-y-2">
+                        {transferTemplates.map((template) => {
+                            const fromAccount = template.from_account as { name: string; icon: string } | null
+                            const toAccount = template.to_account as { name: string; icon: string } | null
+
+                            return (
+                                <div
+                                    key={template.id}
+                                    className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-colors ${template.is_active
+                                            ? 'border-white/10 bg-white/5 hover:border-white/15'
+                                            : 'border-white/5 bg-white/2 opacity-50'
+                                        }`}
+                                >
+                                    <div className="flex items-center gap-3 min-w-0">
+                                        <span className="text-xl shrink-0">{template.emoji ?? '🔄'}</span>
+                                        <div className="min-w-0">
+                                            <div className="flex items-center gap-1.5">
+                                                <p className="text-sm font-medium text-white truncate">
+                                                    {fromAccount?.icon} {fromAccount?.name}
+                                                </p>
+                                                <span className="text-white/20 text-xs shrink-0">→</span>
+                                                <p className="text-sm font-medium text-white truncate">
+                                                    {toAccount?.icon} {toAccount?.name}
+                                                </p>
+                                            </div>
+                                            <p className="text-xs text-white/30 font-mono mt-0.5">
+                                                giorno {template.scheduled_day}
+                                                {template.amount_is_variable && ' · variabile'}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-4 shrink-0">
+                                        <p className="text-sm font-bold font-mono text-blue-400">
+                                            {new Intl.NumberFormat('it-IT', {
+                                                style: 'currency',
+                                                currency: 'EUR',
+                                            }).format(template.amount)}
+                                        </p>
+                                        <ToggleTemplateButton
+                                            id={template.id}
+                                            isActive={template.is_active}
+                                            type="transfer"
+                                        />
+                                        <EditTransferTemplateDialog
+                                            template={template as TransferTemplate}
+                                            accounts={accounts}
+                                        />
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                )}
+            </section>
         </div>
     )
 }

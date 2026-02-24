@@ -1,19 +1,24 @@
 'use client'
 
 import { useTransition } from 'react'
-import { toggleRecurringTemplate } from '@/lib/actions/templates'
+import { toggleRecurringTemplate, toggleTransferTemplate } from '@/lib/actions/templates'
 
 interface ToggleTemplateButtonProps {
     id: string
     isActive: boolean
+    type: 'recurring' | 'transfer'
 }
 
-export function ToggleTemplateButton({ id, isActive }: ToggleTemplateButtonProps) {
+export function ToggleTemplateButton({ id, isActive, type }: ToggleTemplateButtonProps) {
     const [isPending, startTransition] = useTransition()
 
     function handleToggle() {
         startTransition(async () => {
-            await toggleRecurringTemplate(id, !isActive)
+            if (type === 'recurring') {
+                await toggleRecurringTemplate(id, !isActive)
+            } else {
+                await toggleTransferTemplate(id, !isActive)
+            }
         })
     }
 
