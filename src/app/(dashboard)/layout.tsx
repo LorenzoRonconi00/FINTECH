@@ -14,7 +14,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     backgroundSize: '48px 48px',
                 }}
             />
-            <header className="relative border-b border-white/5 bg-[#080c14]/80 backdrop-blur-sm sticky top-0 z-10">
+            <header className="border-b border-white/5 bg-[#080c14]/80 backdrop-blur-sm sticky top-0 z-10">
                 <div className="container mx-auto flex h-14 items-center justify-between px-6">
                     <nav className="flex items-center gap-8">
                         <div className="flex items-center gap-2">
@@ -33,6 +33,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         </Link>
                         <Link href="/settings/categories" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
                             Categorie
+                        </Link>
+                        <Link href="/templates" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
+                            Template
                         </Link>
                     </nav>
                     <form action={logout}>

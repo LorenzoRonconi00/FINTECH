@@ -35,3 +35,13 @@ export const CATEGORY_COLORS = [
     '#ef4444', '#a855f7', '#eab308', '#14b8a6',
     '#ec4899', '#64748b',
 ]
+
+export type RecurringTemplate = Database['public']['Tables']['recurring_templates']['Row']
+export type RecurringTemplateInsert = Database['public']['Tables']['recurring_templates']['Insert']
+export type RecurringTemplateUpdate = Database['public']['Tables']['recurring_templates']['Update']
+export type TransactionType = Database['public']['Enums']['transaction_type']
+
+export const TRANSACTION_TYPE_LABELS: Record<TransactionType, string> = {
+    income: 'Entrata',
+    expense: 'Uscita',
+}
