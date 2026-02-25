@@ -78,6 +78,23 @@ export function isTemplateActiveForPeriod(
     return true
 }
 
-function formatPeriod(year: number, month: number): string {
+export function formatPeriod(year: number, month: number): string {
     return `${year}-${String(month).padStart(2, '0')}`
+}
+
+export function getLastNPeriods(fromPeriod: string, n: number): string[] {
+    const periods: string[] = [fromPeriod]
+    let year = parseInt(fromPeriod.slice(0, 4), 10)
+    let month = parseInt(fromPeriod.slice(5, 7), 10)
+
+    for (let i = 1; i < n; i++) {
+        month -= 1
+        if (month < 1) {
+            month = 12
+            year -= 1
+        }
+        periods.push(formatPeriod(year, month))
+    }
+
+    return periods
 }

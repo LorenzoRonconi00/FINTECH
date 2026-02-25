@@ -46,6 +46,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <Link href="/history" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
                             Storico
                         </Link>
+                        <Link href="/statistics" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
+                            Statistiche
+                        </Link>
                     </nav>
                     <form action={logout}>
                         <button
