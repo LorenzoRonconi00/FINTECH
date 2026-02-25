@@ -1,28 +1,53 @@
 import { Suspense } from 'react'
 import { getUserSettings } from '@/lib/queries/settings'
 import { getCurrentFinancialPeriod } from '@/lib/utils/financial-period'
-import { getTransactionsByPeriod } from '@/lib/queries/transactions'
+import { getTransactionsByPeriodFiltered, getAvailablePeriods } from '@/lib/queries/transactions'
 import { getActiveAccounts } from '@/lib/queries/accounts'
 import { getCategories } from '@/lib/queries/categories'
 import { CreateTransactionDialog } from '@/components/transactions/CreateTransactionDialog'
 import { ConfirmTransactionDialog } from '@/components/transactions/ConfirmTransactionDialog'
 import { SkipTransactionButton } from '@/components/transactions/SkipTransactionButton'
+import { EditTransactionDialog } from '@/components/transactions/EditTransactionDialog'
+import { TransactionFilters } from '@/components/transactions/TransactionFilters'
+import type { Transaction } from '@/types'
 
-export default async function TransactionsPage() {
+interface TransactionsPageProps {
+    searchParams: Promise<{
+        period?: string
+        status?: string
+        type?: string
+        account_id?: string
+    }>
+}
+
+export default async function TransactionsPage({ searchParams }: TransactionsPageProps) {
+    const params = await searchParams
     const settings = await getUserSettings()
     const currentPeriod = getCurrentFinancialPeriod(
         settings.budget_start_day,
         settings.timezone
     )
 
-    const [transactions, accounts, categories] = await Promise.all([
-        getTransactionsByPeriod(currentPeriod),
+    const activePeriod = params.period ?? currentPeriod
+
+    const [transactions, accounts, categories, periods] = await Promise.all([
+        getTransactionsByPeriodFiltered(activePeriod, {
+            status: params.status as 'pending' | 'confirmed' | 'skipped' | undefined,
+            type: params.type as 'income' | 'expense' | undefined,
+            account_id: params.account_id,
+        }),
         getActiveAccounts(),
         getCategories(),
+        getAvailablePeriods(),
     ])
 
-    const confirmed = transactions.filter((t) => t.status === 'confirmed')
+    // Assicura che il periodo corrente sia sempre presente nella lista
+    const allPeriods = periods.includes(currentPeriod)
+        ? periods
+        : [currentPeriod, ...periods]
+
     const pending = transactions.filter((t) => t.status === 'pending')
+    const confirmed = transactions.filter((t) => t.status === 'confirmed')
     const skipped = transactions.filter((t) => t.status === 'skipped')
 
     return (
@@ -31,17 +56,25 @@ export default async function TransactionsPage() {
                 <div>
                     <h1 className="text-2xl font-bold text-white">Transazioni</h1>
                     <p className="text-white/40 text-sm mt-1 font-mono">
-                        Periodo {currentPeriod}
+                        Periodo {activePeriod}
                     </p>
                 </div>
                 <CreateTransactionDialog accounts={accounts} categories={categories} />
             </div>
 
+            <Suspense>
+                <TransactionFilters
+                    accounts={accounts}
+                    periods={allPeriods}
+                    currentPeriod={currentPeriod}
+                />
+            </Suspense>
+
             {transactions.length === 0 && (
                 <div className="text-center py-16 rounded-xl border border-white/10 border-dashed bg-white/2">
                     <p className="text-white/40 font-mono text-sm">Nessuna transazione</p>
                     <p className="text-white/25 font-mono text-xs mt-1">
-                        Aggiungi una transazione manuale o genera le voci pending dalla dashboard
+                        Nessuna transazione corrisponde ai filtri selezionati
                     </p>
                 </div>
             )}
@@ -77,7 +110,7 @@ export default async function TransactionsPage() {
                                             {new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(tx.amount)}
                                         </p>
                                         <SkipTransactionButton id={tx.id} />
-                                        <ConfirmTransactionDialog transaction={tx} />
+                                        <ConfirmTransactionDialog transaction={tx as Transaction} />
                                     </div>
                                 </div>
                             )
@@ -95,6 +128,7 @@ export default async function TransactionsPage() {
                         {confirmed.map((tx) => {
                             const category = tx.category as { name: string; icon: string; color: string } | null
                             const account = tx.account as { name: string; icon: string } | null
+                            const isManual = !tx.recurring_template_id && !tx.transfer_id
                             return (
                                 <div key={tx.id} className="flex items-center justify-between px-4 py-3 rounded-xl border border-white/10 bg-white/5 hover:border-white/15 transition-colors">
                                     <div className="flex items-center gap-3 min-w-0">
@@ -111,10 +145,15 @@ export default async function TransactionsPage() {
                                             </p>
                                         </div>
                                     </div>
-                                    <p className={`text-sm font-bold font-mono shrink-0 ${tx.type === 'income' ? 'text-emerald-400' : 'text-red-400'}`}>
-                                        {tx.type === 'expense' ? '-' : '+'}
-                                        {new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(tx.amount)}
-                                    </p>
+                                    <div className="flex items-center gap-3 shrink-0">
+                                        <p className={`text-sm font-bold font-mono ${tx.type === 'income' ? 'text-emerald-400' : 'text-red-400'}`}>
+                                            {tx.type === 'expense' ? '-' : '+'}
+                                            {new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(tx.amount)}
+                                        </p>
+                                        {isManual && (
+                                            <EditTransactionDialog transaction={tx as Transaction} />
+                                        )}
+                                    </div>
                                 </div>
                             )
                         })}

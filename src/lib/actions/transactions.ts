@@ -75,3 +75,45 @@ export async function skipTransaction(id: string) {
     revalidatePath('/transactions')
     return { success: true }
 }
+
+export async function updateTransaction(
+    id: string,
+    data: { title: string; amount: number; date: string; notes?: string }
+) {
+    const supabase = await createClient()
+
+    const { error } = await supabase
+        .from('transactions')
+        .update({
+            title: data.title,
+            amount: data.amount,
+            date: data.date,
+            notes: data.notes || null,
+        })
+        .eq('id', id)
+        .is('recurring_template_id', null)
+        .is('transfer_id', null)
+
+    if (error) return { error: error.message }
+
+    revalidatePath('/')
+    revalidatePath('/transactions')
+    return { success: true }
+}
+
+export async function deleteTransaction(id: string) {
+    const supabase = await createClient()
+
+    const { error } = await supabase
+        .from('transactions')
+        .delete()
+        .eq('id', id)
+        .is('recurring_template_id', null)
+        .is('transfer_id', null)
+
+    if (error) return { error: error.message }
+
+    revalidatePath('/')
+    revalidatePath('/transactions')
+    return { success: true }
+}
