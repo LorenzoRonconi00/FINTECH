@@ -56,7 +56,58 @@ export async function getAvailablePeriods() {
 
     if (error) throw error
 
-    // deduplication
     const periods = [...new Set(data.map((t) => t.financial_period))]
     return periods
+}
+
+export async function getPeriodSummary(period: string) {
+    const supabase = await createClient()
+
+    const { data, error } = await supabase
+        .from('transactions')
+        .select('amount, type, status')
+        .eq('financial_period', period)
+
+    if (error) throw error
+
+    const confirmedIncome = data
+        .filter((t) => t.status === 'confirmed' && t.type === 'income')
+        .reduce((sum, t) => sum + Number(t.amount), 0)
+
+    const confirmedExpense = data
+        .filter((t) => t.status === 'confirmed' && t.type === 'expense')
+        .reduce((sum, t) => sum + Number(t.amount), 0)
+
+    const pendingIncome = data
+        .filter((t) => t.status === 'pending' && t.type === 'income')
+        .reduce((sum, t) => sum + Number(t.amount), 0)
+
+    const pendingExpense = data
+        .filter((t) => t.status === 'pending' && t.type === 'expense')
+        .reduce((sum, t) => sum + Number(t.amount), 0)
+
+    return {
+        confirmedIncome,
+        confirmedExpense,
+        realBalance: confirmedIncome - confirmedExpense,
+        projectedBalance: (confirmedIncome + pendingIncome) - (confirmedExpense + pendingExpense),
+    }
+}
+
+export async function getPendingTransactions(period: string) {
+    const supabase = await createClient()
+
+    const { data, error } = await supabase
+        .from('transactions')
+        .select(`
+            *,
+            account:accounts(id, name, color, icon),
+            category:categories(id, name, color, icon)
+        `)
+        .eq('financial_period', period)
+        .eq('status', 'pending')
+        .order('date', { ascending: true })
+
+    if (error) throw error
+    return data
 }
