@@ -1,11 +1,12 @@
 import { Suspense } from 'react'
 import { getUserSettings } from '@/lib/queries/settings'
 import { getCurrentFinancialPeriod, getLastNPeriods } from '@/lib/utils/financial-period'
-import { getExpensesByCategory, getIncomeByCategory } from '@/lib/queries/statistics'
+import { getExpensesByCategory, getIncomeByCategory, getBalanceTrend } from '@/lib/queries/statistics'
 import { getActiveAccounts } from '@/lib/queries/accounts'
 import { StatisticsFilters } from '@/components/statistics/StatisticsFilters'
 import { ExpensesPieChart } from '@/components/statistics/ExpensesPieChart'
 import { ExpensesBarChart } from '@/components/statistics/ExpensesBarChart'
+import { BalanceTrendChart } from '@/components/statistics/BalanceTrendChart'
 
 interface StatisticsPageProps {
     searchParams: Promise<{
@@ -27,10 +28,11 @@ export default async function StatisticsPage({ searchParams }: StatisticsPagePro
     const periods = getLastNPeriods(currentPeriod, range)
     const includeTransfers = params.transfers === '1'
 
-    const [expensesByCategory, incomeByCategory, accounts] = await Promise.all([
+    const [expensesByCategory, incomeByCategory, accounts, balanceTrend] = await Promise.all([
         getExpensesByCategory(periods, params.account_id, includeTransfers),
         getIncomeByCategory(periods, params.account_id, includeTransfers),
         getActiveAccounts(),
+        getBalanceTrend(params.account_id),
     ])
 
     const totalExpenses = expensesByCategory.reduce((sum, c) => sum + c.total, 0)
@@ -86,9 +88,8 @@ export default async function StatisticsPage({ searchParams }: StatisticsPagePro
                         {expensesByCategory.map((cat, i) => (
                             <div
                                 key={cat.id}
-                                className={`flex items-center justify-between px-4 py-3 ${
-                                    i < expensesByCategory.length - 1 ? 'border-b border-white/5' : ''
-                                }`}
+                                className={`flex items-center justify-between px-4 py-3 ${i < expensesByCategory.length - 1 ? 'border-b border-white/5' : ''
+                                    }`}
                             >
                                 <div className="flex items-center gap-3">
                                     <div
@@ -143,9 +144,8 @@ export default async function StatisticsPage({ searchParams }: StatisticsPagePro
                         {incomeByCategory.map((cat, i) => (
                             <div
                                 key={cat.id}
-                                className={`flex items-center justify-between px-4 py-3 ${
-                                    i < incomeByCategory.length - 1 ? 'border-b border-white/5' : ''
-                                }`}
+                                className={`flex items-center justify-between px-4 py-3 ${i < incomeByCategory.length - 1 ? 'border-b border-white/5' : ''
+                                    }`}
                             >
                                 <div className="flex items-center gap-3">
                                     <div
@@ -180,6 +180,18 @@ export default async function StatisticsPage({ searchParams }: StatisticsPagePro
                         ))}
                     </div>
                 )}
+            </section>
+            {/* Trend saldo */}
+            <section className="space-y-4">
+                <h2 className="text-xs font-mono uppercase tracking-widest text-white/30">
+                    Trend saldo nel tempo
+                </h2>
+                <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+                    <BalanceTrendChart
+                        data={balanceTrend}
+                        currency={settings.default_currency}
+                    />
+                </div>
             </section>
         </div>
     )

@@ -92,3 +92,47 @@ export async function getIncomeByCategory(
 
     return Array.from(map.values()).sort((a, b) => b.total - a.total)
 }
+
+export async function getBalanceTrend(accountId?: string) {
+    const supabase = await createClient()
+
+    let accountsQuery = supabase
+        .from('accounts')
+        .select('id, name, color, balance_initial')
+        .eq('is_active', true)
+
+    if (accountId) accountsQuery = accountsQuery.eq('id', accountId)
+
+    const { data: accounts, error: accError } = await accountsQuery
+    if (accError) throw accError
+
+    let txQuery = supabase
+        .from('transactions')
+        .select('amount, type, financial_period, account_id')
+        .eq('status', 'confirmed')
+        .order('financial_period', { ascending: true })
+
+    if (accountId) txQuery = txQuery.eq('account_id', accountId)
+
+    const { data: transactions, error: txError } = await txQuery
+    if (txError) throw txError
+
+    const periods = [...new Set(transactions.map((t) => t.financial_period))].sort()
+
+    if (periods.length === 0) return []
+
+    const totalInitial = accounts.reduce((sum, a) => sum + Number(a.balance_initial), 0)
+
+    const trend = periods.map((period) => {
+        const txUpToPeriod = transactions.filter((t) => t.financial_period <= period)
+        const delta = txUpToPeriod.reduce((sum, t) => {
+            return t.type === 'income' ? sum + Number(t.amount) : sum - Number(t.amount)
+        }, 0)
+        return {
+            period,
+            balance: totalInitial + delta,
+        }
+    })
+
+    return trend
+}
