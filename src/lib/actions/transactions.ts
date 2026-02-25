@@ -37,3 +37,41 @@ export async function createTransaction(data: TransactionFormValues) {
     revalidatePath('/transactions')
     return { success: true }
 }
+
+export async function confirmTransaction(
+    id: string,
+    data: { date: string; amount: number; notes?: string }
+) {
+    const supabase = await createClient()
+
+    const { error } = await supabase
+        .from('transactions')
+        .update({
+            status: 'confirmed',
+            date: data.date,
+            amount: data.amount,
+            notes: data.notes || null,
+        })
+        .eq('id', id)
+
+    if (error) return { error: error.message }
+
+    revalidatePath('/')
+    revalidatePath('/transactions')
+    return { success: true }
+}
+
+export async function skipTransaction(id: string) {
+    const supabase = await createClient()
+
+    const { error } = await supabase
+        .from('transactions')
+        .update({ status: 'skipped' })
+        .eq('id', id)
+
+    if (error) return { error: error.message }
+
+    revalidatePath('/')
+    revalidatePath('/transactions')
+    return { success: true }
+}

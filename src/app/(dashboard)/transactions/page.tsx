@@ -5,6 +5,8 @@ import { getTransactionsByPeriod } from '@/lib/queries/transactions'
 import { getActiveAccounts } from '@/lib/queries/accounts'
 import { getCategories } from '@/lib/queries/categories'
 import { CreateTransactionDialog } from '@/components/transactions/CreateTransactionDialog'
+import { ConfirmTransactionDialog } from '@/components/transactions/ConfirmTransactionDialog'
+import { SkipTransactionButton } from '@/components/transactions/SkipTransactionButton'
 
 export default async function TransactionsPage() {
     const settings = await getUserSettings()
@@ -69,10 +71,14 @@ export default async function TransactionsPage() {
                                             </p>
                                         </div>
                                     </div>
-                                    <p className={`text-sm font-bold font-mono shrink-0 ${tx.type === 'income' ? 'text-emerald-400/60' : 'text-red-400/60'}`}>
-                                        {tx.type === 'expense' ? '-' : '+'}
-                                        {new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(tx.amount)}
-                                    </p>
+                                    <div className="flex items-center gap-2 shrink-0">
+                                        <p className={`text-sm font-bold font-mono mr-2 ${tx.type === 'income' ? 'text-emerald-400/60' : 'text-red-400/60'}`}>
+                                            {tx.type === 'expense' ? '-' : '+'}
+                                            {new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(tx.amount)}
+                                        </p>
+                                        <SkipTransactionButton id={tx.id} />
+                                        <ConfirmTransactionDialog transaction={tx} />
+                                    </div>
                                 </div>
                             )
                         })}

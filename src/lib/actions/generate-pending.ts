@@ -18,24 +18,6 @@ export async function generatePendingForPeriod(period: string) {
 
     if (settingsError) return { error: settingsError.message }
 
-    const { count: existingTransactions } = await supabase
-        .from('transactions')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id)
-        .eq('financial_period', period)
-        .not('recurring_template_id', 'is', null)
-
-    const { count: existingTransfers } = await supabase
-        .from('transfers')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id)
-        .eq('financial_period', period)
-        .not('transfer_template_id', 'is', null)
-
-    if ((existingTransactions ?? 0) > 0 || (existingTransfers ?? 0) > 0) {
-        return { success: true, skipped: true }
-    }
-
     const { data: recurringTemplates, error: rtError } = await supabase
         .from('recurring_templates')
         .select('*')
@@ -61,8 +43,18 @@ export async function generatePendingForPeriod(period: string) {
     const periodYear = parseInt(period.slice(0, 4), 10)
     const periodMonth = parseInt(period.slice(5, 7), 10)
 
+    const { data: existingTx } = await supabase
+        .from('transactions')
+        .select('recurring_template_id')
+        .eq('user_id', user.id)
+        .eq('financial_period', period)
+        .not('recurring_template_id', 'is', null)
+
+    const alreadyGeneratedTx = new Set(existingTx?.map((t) => t.recurring_template_id) ?? [])
+
     const transactionsToInsert = (recurringTemplates ?? [])
         .filter((t) => isTemplateActiveForPeriod(t, period))
+        .filter((t) => !alreadyGeneratedTx.has(t.id))
         .map((t) => ({
             user_id: user.id,
             account_id: t.account_id,
@@ -85,8 +77,18 @@ export async function generatePendingForPeriod(period: string) {
         if (insertTxError) return { error: insertTxError.message }
     }
 
+    const { data: existingTr } = await supabase
+        .from('transfers')
+        .select('transfer_template_id')
+        .eq('user_id', user.id)
+        .eq('financial_period', period)
+        .not('transfer_template_id', 'is', null)
+
+    const alreadyGeneratedTr = new Set(existingTr?.map((t) => t.transfer_template_id) ?? [])
+
     const transfersToInsert = (transferTemplates ?? [])
         .filter((t) => isTemplateActiveForPeriod(t, period))
+        .filter((t) => !alreadyGeneratedTr.has(t.id))
         .map((t) => ({
             user_id: user.id,
             from_account_id: t.from_account_id,
