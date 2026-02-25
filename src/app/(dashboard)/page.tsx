@@ -1,9 +1,20 @@
 import { Suspense } from 'react'
 import { AccountsStrip, AccountsStripSkeleton } from '@/components/accounts/AccountsStrip'
+import { PendingGenerator } from '@/components/dashboard/PendingGenerator'
+import { getUserSettings } from '@/lib/queries/settings'
+import { getCurrentFinancialPeriod } from '@/lib/utils/financial-period'
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+    const settings = await getUserSettings()
+    const currentPeriod = getCurrentFinancialPeriod(
+        settings.budget_start_day,
+        settings.timezone
+    )
+
     return (
         <div className="space-y-8">
+            <PendingGenerator currentPeriod={currentPeriod} />
+
             <div>
                 <h1 className="text-2xl font-bold text-white">Dashboard</h1>
                 <p className="text-white/40 text-sm mt-1 font-mono">

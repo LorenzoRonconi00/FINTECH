@@ -37,6 +37,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <Link href="/templates" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
                             Template
                         </Link>
+                        <Link href="/transactions" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
+                            Transazioni
+                        </Link>
                     </nav>
                     <form action={logout}>
                         <button

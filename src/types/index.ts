@@ -49,3 +49,12 @@ export const TRANSACTION_TYPE_LABELS: Record<TransactionType, string> = {
 export type TransferTemplate = Database['public']['Tables']['transfer_templates']['Row']
 export type TransferTemplateInsert = Database['public']['Tables']['transfer_templates']['Insert']
 export type TransferTemplateUpdate = Database['public']['Tables']['transfer_templates']['Update']
+
+export type Transaction = Database['public']['Tables']['transactions']['Row']
+export type TransactionInsert = Database['public']['Tables']['transactions']['Insert']
+export type TransactionUpdate = Database['public']['Tables']['transactions']['Update']
+export type TransactionStatus = Database['public']['Enums']['transaction_status']
+
+export type UserSettings = Database['public']['Tables']['user_settings']['Row']
+export type Transfer = Database['public']['Tables']['transfers']['Row']
+export type TransferInsert = Database['public']['Tables']['transfers']['Insert']
