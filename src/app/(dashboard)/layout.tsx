@@ -40,6 +40,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <Link href="/transactions" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
                             Transazioni
                         </Link>
+                        <Link href="/transfers" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
+                            Trasferimenti
+                        </Link>
                     </nav>
                     <form action={logout}>
                         <button
