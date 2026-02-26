@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { login } from '@/lib/actions/auth'
+import NProgress from 'nprogress'
 
 export function LoginForm() {
     const [error, setError] = useState<string | null>(null)
@@ -12,6 +13,7 @@ export function LoginForm() {
 
     async function handleSubmit(formData: FormData) {
         setLoading(true)
+        NProgress.start()
         setError(null)
 
         const result = await login(formData)
@@ -19,6 +21,7 @@ export function LoginForm() {
         if (result?.error) {
             setError(result.error)
             setLoading(false)
+            NProgress.done()
             return
         }
 
