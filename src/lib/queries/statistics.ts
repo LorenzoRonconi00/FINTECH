@@ -24,7 +24,6 @@ export async function getExpensesByCategory(
 
     if (error) throw error
 
-    // Raggruppa per categoria
     const map = new Map<string, {
         id: string
         name: string
