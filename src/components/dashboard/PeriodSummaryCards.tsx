@@ -44,7 +44,7 @@ export function PeriodSummaryCards({
             color: projectedBalance >= 0 ? 'text-white/60' : 'text-red-400/60',
             border: 'border-white/5',
             bg: 'bg-white/[0.01]',
-            hint: 'Include i pending',
+            hint: 'Include i movimenti in attesa',
         },
     ]
 

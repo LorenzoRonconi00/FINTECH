@@ -10,8 +10,25 @@ export async function getUserSettings() {
         .from('user_settings')
         .select('*')
         .eq('user_id', user.id)
-        .single()
+        .maybeSingle()
 
     if (error) throw error
+
+    if (!data) {
+        const { data: created, error: createError } = await supabase
+            .from('user_settings')
+            .insert({
+                user_id: user.id,
+                budget_start_day: 1,
+                default_currency: 'EUR',
+                timezone: 'Europe/Rome',
+            })
+            .select()
+            .single()
+
+        if (createError) throw createError
+        return created
+    }
+
     return data
 }
