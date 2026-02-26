@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import type { Category } from '@/types'
 import type { CategoryFormValues } from '@/lib/validators/category'
+import { toast } from 'sonner'
 
 interface EditCategoryDialogProps {
     category: Category
@@ -37,18 +38,22 @@ export function EditCategoryDialog({ category }: EditCategoryDialogProps) {
         const result = await updateCategory(category.id, data)
         if (result?.error) {
             setError(result.error)
+            toast.error(result.error)
             return
         }
         setOpen(false)
+        toast.success('Categoria aggiornata')
     }
 
     async function handleDelete() {
         const result = await deleteCategory(category.id)
         if (result?.error) {
             setError(result.error)
+            toast.error(result.error)
             return
         }
         setOpen(false)
+        toast.success('Categoria eliminata')
     }
 
     return (

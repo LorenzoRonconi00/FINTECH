@@ -3,6 +3,11 @@ import { getUserSettings } from '@/lib/queries/settings'
 import { getCurrentFinancialPeriod } from '@/lib/utils/financial-period'
 import { getAllPeriodSummaries, getTransactionsByPeriodFiltered } from '@/lib/queries/transactions'
 import { PeriodRow } from '@/components/history/PeriodRow'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Storico — FinTech',
+}
 
 interface HistoryPageProps {
     searchParams: Promise<{ period?: string }>

@@ -17,6 +17,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog'
 import type { Transfer } from '@/types'
+import { toast } from 'sonner'
 
 const confirmSchema = z.object({
     date: z.string().min(1, 'La data è obbligatoria'),
@@ -58,9 +59,11 @@ export function ConfirmTransferDialog({
         const result = await confirmTransfer(transfer.id, data)
         if (result?.error) {
             setError(result.error)
+            toast.error(result.error)
             return
         }
         setOpen(false)
+        toast.success('Trasferimento confermato')
     }
 
     return (

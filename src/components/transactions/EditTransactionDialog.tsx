@@ -28,6 +28,7 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import type { Transaction } from '@/types'
+import { toast } from 'sonner'
 
 const editSchema = z.object({
     title: z.string().min(1, 'Il titolo è obbligatorio'),
@@ -65,14 +66,21 @@ export function EditTransactionDialog({ transaction }: EditTransactionDialogProp
         const result = await updateTransaction(transaction.id, data)
         if (result?.error) {
             setError(result.error)
+            toast.error(result.error)
             return
         }
         setOpen(false)
+        toast.success('Transazione aggiornata')
     }
 
     async function handleDelete() {
         const result = await deleteTransaction(transaction.id)
-        if (result?.error) setError(result.error)
+        if (result?.error) {
+            setError(result.error)
+            toast.error(result.error)
+            return
+        }
+        toast.success('Transazione eliminata')
     }
 
     return (

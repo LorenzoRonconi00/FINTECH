@@ -2,6 +2,7 @@
 
 import { useTransition } from 'react'
 import { toggleRecurringTemplate, toggleTransferTemplate } from '@/lib/actions/templates'
+import { toast } from 'sonner'
 
 interface ToggleTemplateButtonProps {
     id: string
@@ -16,8 +17,10 @@ export function ToggleTemplateButton({ id, isActive, type }: ToggleTemplateButto
         startTransition(async () => {
             if (type === 'recurring') {
                 await toggleRecurringTemplate(id, !isActive)
+                toast(isActive ? 'Template disattivato' : 'Template attivato')
             } else {
                 await toggleTransferTemplate(id, !isActive)
+                toast(isActive ? 'Template disattivato' : 'Template attivato')
             }
         })
     }

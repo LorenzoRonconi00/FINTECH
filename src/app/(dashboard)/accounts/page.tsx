@@ -2,6 +2,11 @@ import { Suspense } from 'react'
 import { getAccounts } from '@/lib/queries/accounts'
 import { AccountCard } from '@/components/accounts/AccountCard'
 import { CreateAccountDialog } from '@/components/accounts/CreateAccountDialog'
+import type { Metadata } from 'next'
+    
+export const metadata: Metadata = {
+    title: 'Conti — FinTech',
+}
 
 export default async function AccountsPage() {
     const accounts = await getAccounts()
@@ -30,7 +35,7 @@ export default async function AccountsPage() {
                     {active.map((account) => (
                         <Suspense
                             key={account.id}
-                            fallback={<div className="rounded-lg border bg-card p-4 h-32 animate-pulse" />}
+                            fallback={<div className="rounded-xl border border-white/5 bg-white/2 p-4 h-30 animate-pulse" />}
                         >
                             <AccountCard account={account} />
                         </Suspense>
@@ -47,7 +52,7 @@ export default async function AccountsPage() {
                         {archived.map((account) => (
                             <Suspense
                                 key={account.id}
-                                fallback={<div className="rounded-lg border bg-card p-4 h-32 animate-pulse" />}
+                                fallback={<div className="rounded-xl border border-white/5 bg-white/2 p-4 h-30 animate-pulse" />}
                             >
                                 <AccountCard account={account} />
                             </Suspense>

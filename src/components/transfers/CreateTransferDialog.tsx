@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog'
 import type { Account } from '@/types'
 import type { TransferFormValues } from '@/lib/validators/transfer'
+import { toast } from 'sonner'
 
 interface CreateTransferDialogProps {
     accounts: Account[]
@@ -26,9 +27,11 @@ export function CreateTransferDialog({ accounts }: CreateTransferDialogProps) {
         const result = await createTransfer(data)
         if (result?.error) {
             setError(result.error)
+            toast.error(result.error)
             return
         }
         setOpen(false)
+        toast.success('Trasferimento eseguito')
     }
 
     return (

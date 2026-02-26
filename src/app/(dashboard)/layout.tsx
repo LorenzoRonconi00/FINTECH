@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { logout } from '@/lib/actions/auth'
+import { DashboardNav } from '@/components/layout/DashboardNav'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -16,40 +17,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             />
             <header className="border-b border-white/5 bg-[#080c14]/80 backdrop-blur-sm sticky top-0 z-10">
                 <div className="container mx-auto flex h-14 items-center justify-between px-6">
-                    <nav className="flex items-center gap-8">
-                        <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded bg-emerald-500 flex items-center justify-center">
-                                <span className="text-xs font-bold text-white">F</span>
-                            </div>
-                            <span className="text-sm font-medium text-white/60 tracking-widest uppercase font-mono">
-                                FinTech
-                            </span>
-                        </div>
-                        <Link href="/" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
-                            Dashboard
-                        </Link>
-                        <Link href="/accounts" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
-                            Conti
-                        </Link>
-                        <Link href="/settings/categories" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
-                            Categorie
-                        </Link>
-                        <Link href="/templates" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
-                            Template
-                        </Link>
-                        <Link href="/transactions" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
-                            Transazioni
-                        </Link>
-                        <Link href="/transfers" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
-                            Trasferimenti
-                        </Link>
-                        <Link href="/history" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
-                            Storico
-                        </Link>
-                        <Link href="/statistics" className="text-sm text-white/40 hover:text-white/80 transition-colors font-mono">
-                            Statistiche
-                        </Link>
-                    </nav>
+                    <DashboardNav />
                     <form action={logout}>
                         <button
                             type="submit"

@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { createAccount } from '@/lib/actions/accounts'
 import { AccountForm } from './AccountForm'
-import { Button } from '@/components/ui/button'
 import {
     Dialog,
     DialogContent,
@@ -12,6 +11,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog'
 import type { AccountFormValues } from '@/lib/validators/account'
+import { toast } from 'sonner';
 
 interface CreateAccountDialogProps {
     compact?: boolean
@@ -26,9 +26,11 @@ export function CreateAccountDialog({ compact = false }: CreateAccountDialogProp
         const result = await createAccount(data)
         if (result?.error) {
             setError(result.error)
+            toast.error(result.error)
             return
         }
         setOpen(false)
+        toast.success('Conto creato')
     }
 
     return (

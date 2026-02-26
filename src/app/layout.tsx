@@ -1,34 +1,30 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import type { Metadata } from 'next'
+import { Toaster } from 'sonner'
+import './globals.css'
 
 export const metadata: Metadata = {
-  title: "FinTech",
-  description: "Personal Finance Manager",
-};
+    title: 'Finance Dashboard',
+    description: 'Gestione finanze personali',
+}
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en">
-      <body suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
-  );
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <html lang="it">
+            <body className="antialiased">
+                {children}
+                <Toaster
+                    position="bottom-right"
+                    toastOptions={{
+                        style: {
+                            background: '#0d1420',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            color: 'white',
+                            fontFamily: 'DM Mono, monospace',
+                            fontSize: '13px',
+                        },
+                    }}
+                />
+            </body>
+        </html>
+    )
 }

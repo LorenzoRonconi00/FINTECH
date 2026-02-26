@@ -17,6 +17,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog'
 import type { Transaction } from '@/types'
+import { toast } from 'sonner'
 
 const confirmSchema = z.object({
     date: z.string().min(1, 'La data è obbligatoria'),
@@ -52,9 +53,11 @@ export function ConfirmTransactionDialog({ transaction }: ConfirmTransactionDial
         const result = await confirmTransaction(transaction.id, data)
         if (result?.error) {
             setError(result.error)
+            toast.error(result.error)
             return
         }
         setOpen(false)
+        toast.success('Transazione confermata')
     }
 
     return (

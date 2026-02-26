@@ -6,6 +6,11 @@ import { CreateTransferDialog } from '@/components/transfers/CreateTransferDialo
 import { ConfirmTransferDialog } from '@/components/transfers/ConfirmTransferDialog'
 import { SkipTransferButton } from '@/components/transfers/SkipTransferButton'
 import type { Transfer } from '@/types'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Trasferimenti — FinTech',
+}
 
 export default async function TransfersPage() {
     const settings = await getUserSettings()

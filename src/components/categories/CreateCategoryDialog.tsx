@@ -11,6 +11,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog'
 import type { CategoryFormValues } from '@/lib/validators/category'
+import { toast } from 'sonner'
 
 export function CreateCategoryDialog() {
     const [open, setOpen] = useState(false)
@@ -21,9 +22,11 @@ export function CreateCategoryDialog() {
         const result = await createCategory(data)
         if (result?.error) {
             setError(result.error)
+            toast.error(result.error)
             return
         }
         setOpen(false)
+        toast.success('Categoria creata')
     }
 
     return (

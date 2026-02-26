@@ -10,9 +10,14 @@ import { DashboardPendingList } from '@/components/dashboard/DashboardPendingLis
 import { DashboardTransactionList } from '@/components/dashboard/DashboardTransactionList'
 import { PeriodSelector } from '@/components/dashboard/PeriodSelector'
 import type { Transaction, Transfer } from '@/types'
+import type { Metadata } from 'next'
 
 interface DashboardPageProps {
     searchParams: Promise<{ period?: string }>
+}
+
+export const metadata: Metadata = {
+    title: 'Dashboard — FinTech',
 }
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {

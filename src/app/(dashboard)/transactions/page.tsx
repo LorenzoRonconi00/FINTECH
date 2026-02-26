@@ -10,6 +10,11 @@ import { SkipTransactionButton } from '@/components/transactions/SkipTransaction
 import { EditTransactionDialog } from '@/components/transactions/EditTransactionDialog'
 import { TransactionFilters } from '@/components/transactions/TransactionFilters'
 import type { Transaction } from '@/types'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Transazioni — FinTech',
+}
 
 interface TransactionsPageProps {
     searchParams: Promise<{

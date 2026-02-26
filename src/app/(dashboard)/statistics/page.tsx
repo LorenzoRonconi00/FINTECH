@@ -7,6 +7,11 @@ import { StatisticsFilters } from '@/components/statistics/StatisticsFilters'
 import { ExpensesPieChart } from '@/components/statistics/ExpensesPieChart'
 import { ExpensesBarChart } from '@/components/statistics/ExpensesBarChart'
 import { BalanceTrendChart } from '@/components/statistics/BalanceTrendChart'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Statistiche — FinTech',
+}
 
 interface StatisticsPageProps {
     searchParams: Promise<{

@@ -7,6 +7,11 @@ import { ToggleTemplateButton } from '@/components/templates/ToggleTemplateButto
 import { CreateTransferTemplateDialog } from '@/components/templates/CreateTransferTemplateDialog'
 import { EditTransferTemplateDialog } from '@/components/templates/EditTransferTemplateDialog'
 import { TRANSACTION_TYPE_LABELS, TransferTemplate } from '@/types'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Template — FinTech',
+}
 
 export default async function TemplatesPage() {
     const [templates, transferTemplates, accounts, categories] = await Promise.all([

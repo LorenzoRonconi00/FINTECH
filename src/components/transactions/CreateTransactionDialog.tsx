@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog'
 import type { Account, Category } from '@/types'
 import type { TransactionFormValues } from '@/lib/validators/transaction'
+import { toast } from 'sonner'
 
 interface CreateTransactionDialogProps {
     accounts: Account[]
@@ -27,9 +28,11 @@ export function CreateTransactionDialog({ accounts, categories }: CreateTransact
         const result = await createTransaction(data)
         if (result?.error) {
             setError(result.error)
+            toast.error(result.error)
             return
         }
         setOpen(false)
+        toast.success('Transazione registrata')
     }
 
     return (

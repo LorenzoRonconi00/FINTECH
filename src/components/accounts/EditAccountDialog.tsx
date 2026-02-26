@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import type { Account } from '@/types'
 import type { AccountFormValues } from '@/lib/validators/account'
+import { toast } from 'sonner';
 
 interface EditAccountDialogProps {
     account: Account
@@ -37,13 +38,16 @@ export function EditAccountDialog({ account }: EditAccountDialogProps) {
         const result = await updateAccount(account.id, data)
         if (result?.error) {
             setError(result.error)
+            toast.error(result.error)
             return
         }
         setOpen(false)
+        toast.success('Conto aggiornato')
     }
 
     async function handleArchive() {
         await archiveAccount(account.id)
+        toast.success('Conto archiviato')
     }
 
     async function handleRestore() {

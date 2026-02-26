@@ -2,6 +2,7 @@
 
 import { useTransition } from 'react'
 import { skipTransaction } from '@/lib/actions/transactions'
+import { toast } from 'sonner'
 
 interface SkipTransactionButtonProps {
     id: string
@@ -13,6 +14,7 @@ export function SkipTransactionButton({ id }: SkipTransactionButtonProps) {
     function handleSkip() {
         startTransition(async () => {
             await skipTransaction(id)
+            toast('Transazione saltata', { description: 'La voce non influenza il saldo'})
         })
     }
 
