@@ -22,6 +22,22 @@ const BOTTOM_NAV_LINKS = [
     { href: '/settings', label: 'Impostazioni', icon: '◎' },
 ]
 
+interface NavLinkProps {
+    href: string
+    isActive: boolean
+    className: string
+    children: React.ReactNode
+}
+
+function NavLink({ href, isActive, className, children }: NavLinkProps) {
+
+    return (
+        <Link href={href} className={className}>
+            {children}
+        </Link>
+    )
+}
+
 export function DashboardNav() {
     const pathname = usePathname()
 
@@ -40,14 +56,15 @@ export function DashboardNav() {
                     ? pathname === '/'
                     : pathname.startsWith(link.href)
                 return (
-                    <Link
+                    <NavLink
                         key={link.href}
                         href={link.href}
+                        isActive={isActive}
                         className={`hidden lg:block text-sm transition-colors font-mono ${isActive ? 'text-white' : 'text-white/40 hover:text-white/80'
                             }`}
                     >
                         {link.label}
-                    </Link>
+                    </NavLink>
                 )
             })}
         </nav>
@@ -65,9 +82,10 @@ export function BottomNav() {
                         ? pathname === '/'
                         : pathname.startsWith(link.href)
                     return (
-                        <Link
+                        <NavLink
                             key={link.href}
                             href={link.href}
+                            isActive={isActive}
                             className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all min-w-14 ${isActive
                                     ? 'text-emerald-400 bg-emerald-500/10'
                                     : 'text-white/30 hover:text-white/60'
@@ -75,7 +93,7 @@ export function BottomNav() {
                         >
                             <span className="text-base leading-none">{link.icon}</span>
                             <span className="text-[10px] font-mono leading-none">{link.label}</span>
-                        </Link>
+                        </NavLink>
                     )
                 })}
             </div>
