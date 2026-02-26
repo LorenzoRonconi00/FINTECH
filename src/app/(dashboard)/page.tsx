@@ -17,7 +17,7 @@ interface DashboardPageProps {
 }
 
 export const metadata: Metadata = {
-    title: 'Dashboard — FinTech',
+    title: 'FinTech - Dashboard',
 }
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {

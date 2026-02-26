@@ -9,7 +9,7 @@ import type { Transfer } from '@/types'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-    title: 'Trasferimenti — FinTech',
+    title: 'FinTech - Trasferimenti',
 }
 
 export default async function TransfersPage() {

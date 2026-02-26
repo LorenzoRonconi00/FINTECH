@@ -13,7 +13,7 @@ import type { Transaction } from '@/types'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-    title: 'Transazioni — FinTech',
+    title: 'FinTech - Transazioni',
 }
 
 interface TransactionsPageProps {

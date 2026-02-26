@@ -10,7 +10,7 @@ import { TRANSACTION_TYPE_LABELS, TransferTemplate } from '@/types'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-    title: 'Template — FinTech',
+    title: 'FinTech - Template',
 }
 
 export default async function TemplatesPage() {

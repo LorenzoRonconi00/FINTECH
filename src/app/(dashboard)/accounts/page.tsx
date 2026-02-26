@@ -5,7 +5,7 @@ import { CreateAccountDialog } from '@/components/accounts/CreateAccountDialog'
 import type { Metadata } from 'next'
     
 export const metadata: Metadata = {
-    title: 'Conti — FinTech',
+    title: 'FinTech - Conti',
 }
 
 export default async function AccountsPage() {

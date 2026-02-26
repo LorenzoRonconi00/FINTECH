@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Toaster } from 'sonner'
 import './globals.css'
 import NextTopLoader from 'nextjs-toploader'
@@ -8,10 +8,15 @@ export const metadata: Metadata = {
     description: 'Personal Finance Manager',
 }
 
+export const viewport: Viewport = {
+    width: 'device-width',
+    initialScale: 1,
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="it">
-            <body className="antialiased">
+        <html lang="it" suppressHydrationWarning>
+            <body className="antialiased" suppressHydrationWarning>
                 <NextTopLoader
                     color="#10b981"
                     height={2}

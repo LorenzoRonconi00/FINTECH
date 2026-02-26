@@ -4,7 +4,7 @@ import { SettingsForm } from '@/components/settings/SettingsForm'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-    title: 'Impostazioni — FinTech',
+    title: 'FinTech - Impostazioni',
 }
 
 export default async function SettingsPage() {

@@ -10,7 +10,7 @@ import { BalanceTrendChart } from '@/components/statistics/BalanceTrendChart'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-    title: 'Statistiche — FinTech',
+    title: 'FinTech - Statistiche',
 }
 
 interface StatisticsPageProps {

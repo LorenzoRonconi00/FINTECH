@@ -6,7 +6,7 @@ import { PeriodRow } from '@/components/history/PeriodRow'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-    title: 'Storico — FinTech',
+    title: 'FinTech - Storico',
 }
 
 interface HistoryPageProps {
