@@ -23,14 +23,12 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
 
     const summaries = await getAllPeriodSummaries()
 
-    // Assicura che il periodo corrente sia sempre in lista anche se senza transazioni
     const allSummaries = summaries.some((s) => s.period === currentPeriod)
         ? summaries
         : [{ period: currentPeriod, confirmedIncome: 0, confirmedExpense: 0, pendingIncome: 0, pendingExpense: 0, realBalance: 0, projectedBalance: 0 }, ...summaries]
 
     const selectedPeriod = params.period
 
-    // Se c'è un periodo selezionato, carica le transazioni di quel periodo
     const periodTransactions = selectedPeriod
         ? await getTransactionsByPeriodFiltered(selectedPeriod, {})
         : null
@@ -48,7 +46,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6 items-start">
 
                 {/* Lista periodi */}
                 <div className="space-y-2">
@@ -82,6 +80,12 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                         </div>
                     ) : (
                         <div className="space-y-6">
+                            <Link
+                                href="/history"
+                                className="lg:hidden inline-flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 font-mono mb-2"
+                            >
+                                ← Torna alla lista
+                            </Link>
                             {/* Intestazione dettaglio */}
                             <div className="flex items-center justify-between">
                                 <div>
@@ -136,13 +140,12 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                                             return (
                                                 <div
                                                     key={tx.id}
-                                                    className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-colors ${
-                                                        tx.status === 'confirmed'
+                                                    className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-colors ${tx.status === 'confirmed'
                                                             ? 'border-white/10 bg-white/5'
                                                             : tx.status === 'pending'
-                                                            ? 'border-white/10 border-dashed bg-white/2'
-                                                            : 'border-white/5 bg-white/1 opacity-40'
-                                                    }`}
+                                                                ? 'border-white/10 border-dashed bg-white/2'
+                                                                : 'border-white/5 bg-white/1 opacity-40'
+                                                        }`}
                                                 >
                                                     <div className="flex items-center gap-3 min-w-0">
                                                         <div
@@ -164,10 +167,9 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <p className={`text-sm font-bold font-mono shrink-0 ${
-                                                        tx.status === 'skipped' ? 'text-white/20' :
-                                                        tx.type === 'income' ? 'text-emerald-400' : 'text-red-400'
-                                                    }`}>
+                                                    <p className={`text-sm font-bold font-mono shrink-0 ${tx.status === 'skipped' ? 'text-white/20' :
+                                                            tx.type === 'income' ? 'text-emerald-400' : 'text-red-400'
+                                                        }`}>
                                                         {tx.type === 'expense' ? '-' : '+'}
                                                         {new Intl.NumberFormat('it-IT', {
                                                             style: 'currency',

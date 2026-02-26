@@ -22,9 +22,9 @@ export async function AccountsStrip() {
     }
 
     return (
-        <div className="flex gap-4 overflow-x-auto pb-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:overflow-x-auto gap-4 pb-1">
             {accounts.map((account) => (
-                <div key={account.id} className="min-w-55 shrink-0">
+                <div key={account.id} className="lg:min-w-55 lg:shrink-0">
                     <Suspense fallback={<AccountCardSkeleton />}>
                         <AccountCard account={account} />
                     </Suspense>

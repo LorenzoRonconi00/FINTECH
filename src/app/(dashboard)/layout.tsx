@@ -1,6 +1,6 @@
-import Link from 'next/link'
-import { logout } from '@/lib/actions/auth'
 import { DashboardNav } from '@/components/layout/DashboardNav'
+import { BottomNav } from '@/components/layout/DashboardNav'
+import { logout } from '@/lib/actions/auth'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -9,9 +9,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 className="fixed inset-0 opacity-[0.07] pointer-events-none"
                 style={{
                     backgroundImage: `
-            linear-gradient(rgba(16, 185, 129, 0.4) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(16, 185, 129, 0.4) 1px, transparent 1px)
-          `,
+                        linear-gradient(rgba(16, 185, 129, 0.4) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(16, 185, 129, 0.4) 1px, transparent 1px)
+                    `,
                     backgroundSize: '48px 48px',
                 }}
             />
@@ -28,9 +28,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </form>
                 </div>
             </header>
-            <main className="relative container mx-auto px-6 py-8">
+            <main className="relative container mx-auto px-4 sm:px-6 py-6 sm:py-8 pb-24 lg:pb-8">
                 {children}
             </main>
+            <BottomNav />
         </div>
     )
 }
