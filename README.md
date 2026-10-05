@@ -2,7 +2,7 @@
 
 A personal finance web app built around **custom financial periods** (for example, a budget month that starts on the day your salary arrives) and **recurring templates** that generate the expected transactions for you, so you can track what has actually happened versus what is still pending.
 
-**Live demo:** https://fintech-dusky-beta.vercel.app
+**Live demo:** https://www.fintechprolab.com/
 
 ## Features
 
